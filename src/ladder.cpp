@@ -7,6 +7,7 @@
 #include <set>
 #include <cctype>
 #include <cmath>
+#include <cassert>
 using namespace std;
 
 void error(string word1, string word2, string msg) {
@@ -20,8 +21,6 @@ void lowercase(string &word) {
 }
 
 vector<string> generate_word_ladder(const string& begin_word, const string& end_word, const set<string>& word_list) {
-    lowercase(begin_word);
-    lowercase(end_word);
     vector<string> begin {begin_word};
     
     if (begin_word == end_word) { // check invalid input: beginning and end are the same!
@@ -35,15 +34,16 @@ vector<string> generate_word_ladder(const string& begin_word, const string& end_
     set<string> visited;
     visited.insert(begin_word);
     while (!ladder_queue.empty()) {
-        ladder = ladder_queue.pop()
-        last_word = ladder.back(); // last element in the current ladder
+        vector<string> ladder = ladder_queue.front();
+        ladder_queue.pop();
+        string last_word = ladder.back(); // last element in the current ladder
         for (auto word: word_list) {
 
             if (is_adjacent(last_word, word)) {
 
-                if (!visited.contains(word)) {
+                if (visited.find(word) == visited.end()) {
                     visited.insert(word);
-                    new_ladder = ladder;
+                    vector<string> new_ladder = ladder;
                     new_ladder.push_back(word);
 
                     if (word == end_word) {
@@ -94,9 +94,32 @@ bool edit_distance_within(const std::string& str1, const std::string& str2, int 
 }
 
 void load_words(set<string> & word_list, const string& file_name) {
-    
+    ifstream infile(file_name);
+    if (!infile) {
+        cout << "Error: Cannot open file." << endl;
+        return;
+    }
+    string word;
+    while (infile >> word) {
+        lowercase(word);
+        word_list.insert(word);
+    }
 }
 
-void print_word_ladder(const vector<string>& ladder);
+void print_word_ladder(const vector<string>& ladder) {
+    for (auto word: ladder) {
+        cout << word << endl;
+    }
+}
 
-void verify_word_ladder();
+void verify_word_ladder() {
+    set<string> word_list;
+
+    load_words(word_list, "src/words.txt");
+    assert(generate_word_ladder("cat", "dog", word_list).size() == 4);
+    assert(generate_word_ladder("marty", "curls", word_list).size() == 6);
+    assert(generate_word_ladder("code", "data", word_list).size() == 6);
+    assert(generate_word_ladder("work", "play", word_list).size() == 6);
+    assert(generate_word_ladder("sleep", "awake", word_list).size() == 8);
+    assert(generate_word_ladder("car", "cheat", word_list).size() == 4);    
+}
