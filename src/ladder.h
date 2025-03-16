@@ -17,6 +17,3 @@ void load_words(set<string> & word_list, const string& file_name);
 void print_word_ladder(const vector<string>& ladder);
 void verify_word_ladder();
 
-// helpers
-bool adj_diff(const string& small, const string& big);
-bool adj_same(const string& word1, const string& word2);

@@ -59,64 +59,43 @@ vector<string> generate_word_ladder(const string& begin_word, const string& end_
     return none;
 }
 
-bool adj_diff(const string& small, const string& big) {
-    // checking for adjacency
-    bool skipped = false;
-    int i = 0, j = 0;
+bool is_adjacent(const string& word1, const string& word2) {
+    // two cases: one word is 1 char longer than the other or the words differ by one letter
+    return edit_distance_within(word1, word2, 1);
+}
 
-    while (i < small.size() && j < big.size()) {
-        if (small[i] == big[j]) {
+bool edit_distance_within(const std::string& str1, const std::string& str2, int d) {
+    // checking for adjacency
+    int skipped = d;
+    int i = 0, j = 0;
+    int len1 = str1.size(), len2 = str2.size();
+
+    if (abs(len1 - len2) > d) return false;
+
+    while (i < len1 && j < len2) {
+        if (str1[i] == str2[j]) {
             i++;
             j++;
         } else {
-            if (skipped) 
-                return false;
-            skipped = true;
-            j++; // skip one extra in big word
+            if (skipped == 0) return false;
+            skipped--;
+            if (len1 == len2) {
+                i++;
+                j++;
+            } else if (len1 < len2) {
+                j++;
+            } else { 
+                i++;
+            }
+        
         }
     }
     return true;
 }
 
-bool adj_same(const string& word1, const string& word2) {
-    bool skipped = false;
-    for (size_t i = 0; i < word1.length(); ++i) {
-        if (word1[i] != word2[i]) {
-            if (skipped) 
-                return false;
-            skipped = true;
-        }
-    }
-    return skipped;
+void load_words(set<string> & word_list, const string& file_name) {
+    
 }
-
-bool is_adjacent(const string& word1, const string& word2) {
-    // two cases: one word is 1 char longer than the other or the words differ by one letter
-    size_t length1 = word1.length();
-    size_t length2 = word2.length();
-
-    if (abs(length1 - length2) > 1) return false;
-
-    if (length1 != length2) { // sizes r different
-        string small, big;
-        if (length1 < length2) {
-            small = word1;
-            big = word2;
-        } else {
-            small = word2;
-            big = word1;
-        }
-
-        return adj_diff(small, big); // check adjacency
-
-    } else { // sizes r same
-        return adj_same(word1, word2);
-    }
-}
-
-bool edit_distance_within(const std::string& str1, const std::string& str2, int d);
-
-void load_words(set<string> & word_list, const string& file_name);
 
 void print_word_ladder(const vector<string>& ladder);
 
