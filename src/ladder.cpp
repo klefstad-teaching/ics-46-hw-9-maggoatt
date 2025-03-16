@@ -6,6 +6,7 @@
 #include <queue>
 #include <set>
 #include <cctype>
+#include <cmath>
 using namespace std;
 
 void error(string word1, string word2, string msg) {
@@ -58,13 +59,58 @@ vector<string> generate_word_ladder(const string& begin_word, const string& end_
     return none;
 }
 
+bool adj_diff(const string& small, const string& big) {
+    // checking for adjacency
+    bool skipped = false;
+    int i = 0, j = 0;
+
+    while (i < small.size() && j < big.size()) {
+        if (small[i] == big[j]) {
+            i++;
+            j++;
+        } else {
+            if (skipped) 
+                return false;
+            skipped = true;
+            j++; // skip one extra in big word
+        }
+    }
+    return true;
+}
+
+bool adj_same(const string& word1, const string& word2) {
+    bool skipped = false;
+    for (size_t i = 0; i < word1.length(); ++i) {
+        if (word1[i] != word2[i]) {
+            if (skipped) 
+                return false;
+            skipped = true;
+        }
+    }
+    return skipped;
+}
+
 bool is_adjacent(const string& word1, const string& word2) {
     // two cases: one word is 1 char longer than the other or the words differ by one letter
     size_t length1 = word1.length();
     size_t length2 = word2.length();
 
-    if (word1 != word2) {
+    if (abs(length1 - length2) > 1) return false;
 
+    if (length1 != length2) { // sizes r different
+        string small, big;
+        if (length1 < length2) {
+            small = word1;
+            big = word2;
+        } else {
+            small = word2;
+            big = word1;
+        }
+
+        return adj_diff(small, big); // check adjacency
+
+    } else { // sizes r same
+        return adj_same(word1, word2);
     }
 }
 
