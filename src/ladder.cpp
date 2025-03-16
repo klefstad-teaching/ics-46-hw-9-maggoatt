@@ -54,7 +54,7 @@ vector<string> generate_word_ladder(const string& begin_word, const string& end_
             }
         }
     }
-    vector<string> none {begin_word}
+    vector<string> none {begin_word};
     return none;
 }
 
