@@ -1,13 +1,22 @@
-#include <iostream>
 #include <fstream>
+#include <iostream>
 #include <vector>
 #include <queue>
 #include <limits>
-#include <stack>
-
+#include <algorithm>
+#include <string>
 using namespace std;
 
+
 constexpr int INF = numeric_limits<int>::max();
+
+struct Node {
+    int vertex;
+    int dist;
+    bool operator>(const Node& other) const {
+        return dist > other.dist;
+    }
+};
 
 struct Edge {
     int src=0;
