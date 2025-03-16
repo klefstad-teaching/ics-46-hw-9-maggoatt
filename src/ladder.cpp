@@ -25,7 +25,7 @@ vector<string> generate_word_ladder(const string& begin_word, const string& end_
     
     if (begin_word == end_word) { // check invalid input: beginning and end are the same!
         error(begin_word, end_word, " are invalid.");
-        return begin;
+        return vector<string>();
     }
 
     queue<vector<string>> ladder_queue; // initialize ladder queue with initial stack
