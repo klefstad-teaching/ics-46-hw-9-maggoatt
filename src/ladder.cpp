@@ -54,7 +54,6 @@ vector<string> generate_word_ladder(const string& begin_word, const string& end_
             }
         }
     }
-    cout << "No ladder found." << endl;
     vector<string> none;
     return none;
 }
@@ -107,8 +106,12 @@ void load_words(set<string> & word_list, const string& file_name) {
 }
 
 void print_word_ladder(const vector<string>& ladder) {
+    if (ladder.size() == 0) {
+            cout << "No word ladder found." << endl;
+            return;
+    }
     for (auto word: ladder) {
-        cout << word << endl;
+        cout << word <<  " ";
     }
 }
 
